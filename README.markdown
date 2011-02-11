@@ -22,6 +22,8 @@ Konstati uses HTTP basic authentication, which can be setup using:
 
     Konstati::Base.authenticate(:username => "user", :password => "password")
 
+If authentication fails, Konstati will return 401 Unauhtorized.
+
 ## Spamassassin Tests
 
 ### Create a New Test
@@ -55,6 +57,8 @@ The result will contain the following data:
 ### Get a Test Result
 
     result = Konstati::Tests::Spamassassin.find("4d54f05b898d2994e41dde8b")
+
+If test does not exist, 404 Not Found will be raised.
 
 ### List Test Results
 
