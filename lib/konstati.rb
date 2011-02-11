@@ -2,10 +2,13 @@ require "active_resource"
 
 module Konstati
 
+  VERSION = "0.1.0"
+
   class Base < ActiveResource::Base
 
     self.format = :json
-    self.site = "http://api.konstati.co/"
+    self.site = "http://api.devel.konstati.co/"
+    self.headers['User-Agent'] = "Konstati Ruby Client v0.1"
 
     def self.authenticate(options)
       self.user = options[:username]
@@ -23,20 +26,14 @@ module Konstati
     end
   end
 
-  class SpamTest < Base
-    self.element_name = "spam-test"
-  end
+  module Tests
 
-  class MatchedRule < Hash
-    def initialize(rules)
-      self.replace(rules) 
+    class Spamassassin < Base
+      self.site = "http://api.devel.konstati.co/"
+      self.collection_name = "tests/spamassassin"
+      self.element_name = "spamassassin"
     end
-  end
 
-  class Message < Hash
-    def initialize(properties)
-      self.replace(properties)
-    end
   end
 
 end
