@@ -11,7 +11,8 @@ Gem::Specification.new do |s|
   s.homepage    = "http://konstati.co/"
   s.summary     = %q{Ruby client to the Konstati API}
   s.description = %q{Ruby client to the Konstati API}
-  s.files       = Dir["*.rb"].to_a
-
+  s.licenses    = ["BSD"]
+  s.files       = ["lib/konstati.rb", "README.markdown", "LICENSE"]
+  s.extra_rdoc_files = ["README.markdown", "LICENSE"]
   s.add_dependency "activeresource"
 end
