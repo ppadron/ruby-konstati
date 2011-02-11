@@ -7,7 +7,7 @@ module Konstati
   class Base < ActiveResource::Base
 
     self.format = :json
-    self.site = "http://api.devel.konstati.co/"
+    self.site = "http://api.konstati.co/"
     self.headers['User-Agent'] = "Konstati Ruby Client v0.1"
 
     def self.authenticate(options)
