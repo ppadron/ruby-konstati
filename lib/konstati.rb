@@ -29,9 +29,9 @@ module Konstati
   module Tests
 
     class Spamassassin < Base
-      self.site = "http://api.devel.konstati.co/"
+      self.site = "http://api.konstati.co/"
       self.collection_name = "tests/spamassassin"
-      self.element_name = "spamassassin"
+      self.element_name = "tests/spamassassin"
     end
 
   end
