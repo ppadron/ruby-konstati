@@ -1,39 +1,54 @@
-require "active_resource"
+require 'restclient'
+require 'json'
+require 'konstati/account'
+require 'konstati/test'
 
 module Konstati
 
-  VERSION = "0.1.0"
-
-  class Base < ActiveResource::Base
-
-    self.format = :json
-    self.site = "http://api.konstati.co/"
-    self.headers['User-Agent'] = "Konstati Ruby Client v0.1"
-
-    def self.authenticate(options)
-      self.user = options[:username]
-      self.password = options[:password]
+    def self.endpoint
+        @endpoint ||= "http://api.konstati.co/v1"
     end
 
-    def self.element_path(id, prefix_options = {}, query_options = nil)
-      prefix_options, query_options = split_options(prefix_options) if query_options.nil?
-      "#{prefix(prefix_options)}#{collection_name}/#{id}#{query_string(query_options)}"
+    def self.endpoint=(val)
+        @endpoint = val
     end
 
-    def self.collection_path(prefix_options = {}, query_options = nil)
-      prefix_options, query_options = split_options(prefix_options) if query_options.nil?
-      "#{prefix(prefix_options)}#{collection_name}#{query_string(query_options)}"
-    end
-  end
-
-  module Tests
-
-    class Spamassassin < Base
-      self.site = "http://api.konstati.co/"
-      self.collection_name = "tests/spamassassin"
-      self.element_name = "tests/spamassassin"
+    def self.username
+        @username
     end
 
-  end
+    def self.username=(val)
+        @username = val
+    end
+
+    def self.apikey=(val)
+        @apikey = val
+    end
+
+    def self.apikey
+        @apikey
+    end
+
+    def self.resource(path)
+        RestClient::Resource.new(@endpoint + path, @username, @apikey)
+    end
+
+    def self.request(method, path, params = {})
+
+      begin
+        response = RestClient::Request.execute(
+          :method   => method,
+          :url      => endpoint + path,
+          :payload  => params,
+          :user     => @username,
+          :password => @apikey
+        )
+      rescue Exception => e
+        puts e
+        return false
+      end
+
+      JSON.parse(response)
+    end
 
 end
