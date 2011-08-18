@@ -1,6 +1,6 @@
 module Konstati
 
-  class Test
+  class Tests
 
     def self.create(params)
       Konstati.request(:post, '/tests', params)

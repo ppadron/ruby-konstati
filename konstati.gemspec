@@ -12,9 +12,22 @@ Gem::Specification.new do |s|
   s.summary            = %q{Ruby client to the Konstati API}
   s.description        = %q{Ruby client to the Konstati API}
   s.licenses           = ["BSD"]
-  s.files              = ["lib/konstati.rb", "README.markdown", "LICENSE"]
+  s.files              = [
+    "lib/konstati.rb",
+    "lib/konstati/account.rb",
+    "lib/konstati/tests.rb",
+    "examples/account_info.rb",
+    "examples/create_spamassassin_test.rb",
+    "README.markdown",
+    "LICENSE"
+  ]
   s.rubyforge_project  = "konstati"
-  s.extra_rdoc_files   = ["README.markdown", "LICENSE"]
-
-  s.add_dependency "activeresource"
+  s.extra_rdoc_files   = [
+    "README.markdown",
+    "LICENSE",
+    "examples/account_info.rb",
+    "examples/create_spamassassin_test.rb"
+  ]
+  s.add_dependency "json"
+  s.add_dependency "restclient"
 end

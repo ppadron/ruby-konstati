@@ -1,12 +1,15 @@
 require 'restclient'
 require 'json'
-require 'konstati/account'
-require 'konstati/test'
+
+require File.dirname(__FILE__) + '/konstati/account'
+require File.dirname(__FILE__) + '/konstati/tests'
 
 module Konstati
 
+    VERSION = '0.2.0'
+
     def self.endpoint
-        @endpoint ||= "http://api.konstati.co/v1"
+        @endpoint ||= "https://api.konstati.co/v1"
     end
 
     def self.endpoint=(val)
@@ -34,21 +37,15 @@ module Konstati
     end
 
     def self.request(method, path, params = {})
-
-      begin
-        response = RestClient::Request.execute(
-          :method   => method,
-          :url      => endpoint + path,
-          :payload  => params,
-          :user     => @username,
-          :password => @apikey
+        JSON.parse(
+          RestClient::Request.execute(
+            :method   => method,
+            :url      => endpoint + path,
+            :payload  => params,
+            :user     => @username,
+            :password => @apikey
+          )
         )
-      rescue Exception => e
-        puts e
-        return false
-      end
-
-      JSON.parse(response)
     end
 
 end

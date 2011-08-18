@@ -20,7 +20,8 @@ Use RubyGems to install this library:
 
 Konstati uses HTTP basic authentication, which can be setup using:
 
-    Konstati::Base.authenticate(:username => "user", :password => "password")
+    Konstati.username = "user"
+    Konstati.apikey   = "apikey"
 
 If authentication fails, Konstati will return 401 Unauhtorized.
 
@@ -30,56 +31,54 @@ If authentication fails, Konstati will return 401 Unauhtorized.
 
 This is a sample request:
 
-    result = Konstati::Tests::Spamassassin.create(
+    result = Konstati::Tests.create(
       :bodyHtml  => "<p>Hello World</p>",  # required
       :bodyText  => "Hello World",         # optional
       :subject   => "Free stuff!",         # required
       :fromEmail => "email@example.com",   # required
       :fromName  => "John Doe",            # required
-      :lang      => "pt_BR",               # required
       :customer  => "mycustomerlogin"      # optional
     )
 
 The result will contain the following data:
 
-    id           # (String)  unique test id, you can use this to query it
-    isSpam       # (Boolean) if the message is spam or not (thresold: 7.0 points)
-    lang         # (String)  language used on the results
-    score        # (Float)   total spam score for the message
-    customer     # (String)  optional customer name/login
-    message      # (Message) contains all message-related parameters specified in the request
-    status       # (String)  status of the spam test (done/processing/error/cancelled)
-    testDuration # (Float)   time it took for the test to be processed (in seconds)
-    matchedRules # (Array)   this Array contains all matched Spamassassin rules,
-                 #           where each object contains "ruleName", "description",
-                 #           "score" and "tips" (may be empty)
+    id            # (String)  unique test id, you can use this to query it later
+    emailMessage  # (Hash)    contains all message-related parameters specified in the request
+    customer      # (String)  optional customer name/login supplied in the request
+    lang          # (String)  language used on the results
+    type          # (String)  type of test (currently only spamassassin)
+    status        # (String)  status of the spam test (done/processing/error/cancelled)
+    startedAt     # (Float)   when the test was started (in seconds)
+    updatedAt     # (Float)   when the test was last updated (in seconds)
+    totalRuntime  # (Float)   time it took for the test to be processed (in seconds)
+    result        # (Hash)    contains all test result fields (score, isSpam, matchedRules)
 
 ### Get a Test Result
 
-    result = Konstati::Tests::Spamassassin.find("4d54f05b898d2994e41dde8b")
+    result = Konstati::Tests.find("4d54f05b898d2994e41dde8b")
 
 If test does not exist, 404 Not Found will be raised.
 
 ### List Test Results
 
-    results = Konstati::Tests::Spamassassin.find(:all, :params => {})
+    results = Konstati::Tests.find(:params => {})
 
 Optional parameters in :params may be used to filter results. Available parameters are **lang**,
-**status** and **customer**. Each parameter can be used alone or in a combination with other(s).
+**status** and **customer**. Each parameter can be used alone or with other(s).
 
 Here are some examples:
 
     # all tests performed by "johndoe"
-    results = Konstati::Tests::Spamassassin.find(:all, :params => {:customer => "johndoe"})
+    results = Konstati::Tests.find(:params => {:customer => "johndoe"})
 
-    # all tests in pt_BR by "johndoe"
-    results = Konstati::Tests::Spamassassin.find(:all, :params => {:customer => "johndoe", :lang => "pt_BR"})
+    # all tests in pt by "johndoe"
+    results = Konstati::Tests.find(:params => {:customer => "johndoe", :lang => "pt"})
     
-    # all tests with "done" status in "en_EN"
-    results = Konstati::Tests::Spamassassin.find(:all, :params => {:status => "done", :lang => "en_EN"})
+    # all tests with "done" status in "en"
+    results = Konstati::Tests  .find(:params => {:status => "done", :lang => "en"})
 
 You can also perform pagination using **perPage** and **pageNumber** parameters. Default behavior is to
 return the first 20 results. These parameters can also be used together with filters:
 
-    # give me 40 tests performed by "johndoe" in pt_BR
-    results = Konstati::Tests::Spamassassin.find(:all, :params => {:lang => "en_EN", :perPage => 40, :customer => "johndoe"})
+    # give me 40 tests performed by "johndoe" in pt
+    results = Konstati::Tests.find(:params => {:lang => "en", :perPage => 40, :customer => "johndoe"})
